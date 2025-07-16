@@ -467,6 +467,22 @@ class VaultaClient:
         else:
             return response.content
 
+    def delete_asset(self, asset_id: str) -> bool:
+        """
+        Delete an asset.
+
+        Args:
+            asset_id: The asset UUID
+
+        Returns:
+            True if successful
+
+        Raises:
+            VaultaNotFoundError: If asset is not found
+        """
+        response = self._make_request("DELETE", f"/assets/{asset_id}")
+        return response.status_code == 200
+
     def generate_signed_serve_url(
         self, asset_id: str, client_id: str, secret: str, expires_in: int = 3600
     ) -> str:
@@ -475,12 +491,12 @@ class VaultaClient:
 
         Args:
             asset_id: The asset ID to serve
-            client_id: The client ID
-            secret: The secret key for signing
-            expires_in: Number of seconds until the URL expires
+            client_id: The client ID used for secret derivation
+            secret: The secret key for signing (should be the derived secret)
+            expires_in: Number of seconds until the URL expires (default: 3600 seconds / 1 hour)
 
         Returns:
-            The signed URL path
+            Signed serve URL
         """
-        signed_payload = sign_serve_url(asset_id, client_id, expires_in, secret)
+        signed_payload = sign_serve_url(asset_id, client_id, secret, expires_in)
         return self.get_asset_serve_url(signed_payload)

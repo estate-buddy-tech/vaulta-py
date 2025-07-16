@@ -5,6 +5,7 @@ Utility functions for the Vaulta client.
 import hashlib
 import hmac
 import time
+from typing import Optional
 
 
 def sign_serve_url(
@@ -12,7 +13,7 @@ def sign_serve_url(
     client_id: str,
     client_secret: str,
     expires_in: int = 7200,
-    host_url: str = None,
+    host_url: Optional[str] = None,
 ) -> str:
     """
     Sign a serve URL with document ID, client ID, expiration time, and HMAC signature.

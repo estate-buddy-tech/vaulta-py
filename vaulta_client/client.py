@@ -500,3 +500,20 @@ class VaultaClient:
         """
         signed_payload = sign_serve_url(asset_id, client_id, secret, expires_in)
         return self.get_asset_serve_url(signed_payload)
+
+    def asset_from_url(self, url: str) -> dict:
+        """
+        Create a new asset from a URL.
+
+        Args:
+            url: The URL of the asset to create
+
+        Returns:
+            dict: The response from the Vaulta API
+
+        Raises:
+            VaultaError: If the API request fails
+        """
+        payload = {"url": url}
+        response = self._make_request("POST", "/assets/from-url", data=payload)
+        return response.json()
